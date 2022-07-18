@@ -8,6 +8,7 @@
 - Redoc API docs: [api.task.julian.im/redoc](https://api.task.julian.im/redoc)
 - Swagger API docs: [api.task.julian.im/swagger](https://api.task.julian.im/swagger)
 
+> Please note that you can pick hosts in the API docs.
 
 ### Dependencies
 - Python 3.8+
