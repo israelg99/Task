@@ -72,7 +72,7 @@ tasks:
       - echo "DOMAIN {{ .DOMAIN }}"
       - npm install
       - npm install -g aws-cdk
-      - cdk deploy --all --require-approval never
+      - cdk deploy --all --require-approval never {{.CLI_ARGS}}
 
   build:
     desc: 'Build image'

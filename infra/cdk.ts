@@ -1,25 +1,27 @@
 #!/usr/bin/env node
 import 'source-map-support/register';
 import * as cdk from 'aws-cdk-lib';
-import {CfnOutput, Duration, Stack} from 'aws-cdk-lib';
+import {Duration, Stack} from 'aws-cdk-lib';
 import {
-    AmazonLinuxCpuType,
-    AmazonLinuxGeneration, AmazonLinuxImage, FlowLogDestination, FlowLogTrafficType, InstanceClass, InstanceSize,
+    FlowLogDestination,
+    FlowLogTrafficType,
+    InstanceClass,
+    InstanceSize,
     InstanceType,
     IVpc,
-    MachineImage,
     Port,
     SubnetType,
     Vpc
 } from "aws-cdk-lib/aws-ec2";
 import {
+    AmiHardwareType,
     AsgCapacityProvider,
     AwsLogDriver,
     Cluster,
     ContainerImage,
-    Ec2TaskDefinition, EcsOptimizedImage,
+    Ec2TaskDefinition,
+    EcsOptimizedImage,
     HealthCheck,
-    PlacementConstraint,
     PropagatedTagSource,
     Protocol
 } from "aws-cdk-lib/aws-ecs";
@@ -28,14 +30,10 @@ import * as path from "path";
 import {ICluster} from "aws-cdk-lib/aws-eks";
 import {Construct} from "constructs";
 import {RetentionDays} from "aws-cdk-lib/aws-logs";
-import {ARecord, HostedZone, RecordTarget} from "aws-cdk-lib/aws-route53";
+import {HostedZone} from "aws-cdk-lib/aws-route53";
 import {Certificate, CertificateValidation} from "aws-cdk-lib/aws-certificatemanager";
 import {ApplicationLoadBalancedEc2Service} from "aws-cdk-lib/aws-ecs-patterns";
-import {LoadBalancerTarget} from "aws-cdk-lib/aws-route53-targets";
-import {DockerImageAsset, Platform} from "aws-cdk-lib/aws-ecr-assets";
-import {InstanceArchitecture} from "aws-cdk-lib/aws-ec2";
 import {Repository} from "aws-cdk-lib/aws-ecr";
-import {AmiHardwareType} from "aws-cdk-lib/aws-ecs";
 import {HttpsRedirect} from "aws-cdk-lib/aws-route53-patterns";
 
 const root = path.join(__dirname, `..`);
@@ -93,7 +91,7 @@ asgCapacityProvider.autoScalingGroup.connections.allowToAnyIpv4(Port.allTcp());
 
 const domain = process.env.DOMAIN;
 
-if(domain) {
+if (domain) {
     const uptimeRedirect = new Stack(app, 'task-uptime-redirect', {env});
     new HttpsRedirect(uptimeRedirect, 'Redirect', {
         recordNames: [`uptime.task.${domain}`],
@@ -202,6 +200,10 @@ class Service extends Construct {
                 publicLoadBalancer: true,
                 taskDefinition,
                 healthCheckGracePeriod: props.timeout || Duration.seconds(60),
+                domainName: domain ? props.subdomain || service : undefined,
+                domainZone: domain ? hostedZone : undefined,
+                redirectHTTP: !!domain,
+
             }
         );
         loadBalancedEcsService.listener.connections.allowFromAnyIpv4(Port.allTcp());
@@ -211,16 +213,16 @@ class Service extends Construct {
             path: `/ping`,
         });
 
-        if (hostedZone && loadBalancedEcsService.loadBalancer && certificate) {
-            new ARecord(this, "DnsRecord", {
-                recordName: props.subdomain || service,
-                zone: hostedZone,
-                target: RecordTarget.fromAlias(
-                    new LoadBalancerTarget(loadBalancedEcsService.loadBalancer)
-                ),
-                ttl: Duration.minutes(1),
-            });
-        }
+        // if (hostedZone && loadBalancedEcsService.loadBalancer && certificate) {
+        //     new ARecord(this, "DnsRecord", {
+        //         recordName: props.subdomain || service,
+        //         zone: hostedZone,
+        //         target: RecordTarget.fromAlias(
+        //             new LoadBalancerTarget(loadBalancedEcsService.loadBalancer)
+        //         ),
+        //         ttl: Duration.minutes(1),
+        //     });
+        // }
     }
 }
 

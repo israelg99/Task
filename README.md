@@ -10,6 +10,8 @@
 
 > Please note that you can pick hosts in the API docs.
 
+> Also note you might get a warning on your browser about the site redirecting to https.
+
 ### Dependencies
 - Python 3.8+
 - Node.js 14+
