@@ -20,7 +20,7 @@ $ brew install go-task/tap/go-task
 
 Install dev tools
 ```bash
-$ task install-dev-tools
+$ task install-dev
 ```
 
 ### Usage
