@@ -1,12 +1,12 @@
 # TASK API
 
 ## Setup
-- Main API docs: [api.task.julian.im](https://api.task.julian.im)
-- Uptime: [uptime.task.julian.im](https://uptime.task.julian.im)
+- Main API docs: [api.task.julian.im](api.task.julian.im)
+- Uptime: [uptime.task.julian.im](uptime.task.julian.im)
 
 
-- Redoc API docs: [api.task.julian.im/redoc](https://api.task.julian.im/redoc)
-- Swagger API docs: [api.task.julian.im/swagger](https://api.task.julian.im/swagger)
+- Redoc API docs: [api.task.julian.im/redoc](api.task.julian.im/redoc)
+- Swagger API docs: [api.task.julian.im/swagger](api.task.julian.im/swagger)
 
 > Please note that you can pick hosts in the API docs.
 
