@@ -53,4 +53,6 @@ jobs:
       - name: Test
         run: task test
       - name: Deploy
+        env:
+          DOMAIN: ${{ secrets.DOMAIN }}
         run: task deploy
