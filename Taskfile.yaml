@@ -54,11 +54,13 @@ tasks:
   install-dev:
     desc: 'Install development dependencies'
     cmds:
+      - npm install
       - npm install -g newman
       - npm install -g aws-cdk
       - brew install act
       - docker buildx install
       - docker run --privileged --rm tonistiigi/binfmt --install all
+      - cdk bootstrap
 
   deploy:
     desc: 'Deploys image and infrastructure'
